@@ -43,6 +43,11 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Images and Screenshot
+*.png
+*.jpg
+*.jpeg
+
 # Playwright
 /test-results/
 /playwright-report/
