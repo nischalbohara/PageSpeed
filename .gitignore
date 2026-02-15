@@ -54,3 +54,7 @@ Thumbs.db
 /blob-report/
 /playwright/.cache/
 .env
+
+# Reports
+
+.csv

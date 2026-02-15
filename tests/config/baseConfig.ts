@@ -1,7 +1,8 @@
 // If needed the user credential is to be extracted and saved here
 export interface RoleCredentials {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
+  apikey?: string;
 }
 
 export interface BaseConfig {
@@ -51,13 +52,12 @@ export function getCustomerConfig(
       }
       return { ...config, ...config.roles[role] };
     }
-    case "CientTwo": {
+    case "PageSpeed": {
       const config: BaseConfig = {
-        baseUrl: process.env.ICT_UAT_URL || "",
+        baseUrl: process.env.PS_URL || "",
         roles: {
-          claimsManager: {
-            username: process.env.CT_Outside_ADMIN_USERNAME || "",
-            password: process.env.CT_Outside_ADMIN_PASSWORD || "",
+          reportGen: {
+            apikey: process.env.PS_APIKEY || "",
           },
         },
       };
