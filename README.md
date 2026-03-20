@@ -51,11 +51,16 @@ npm test
 npm run test:headed
 ```
 
-
 ### Run tests with grep
 
 ```bash
 npm run test:grep {projectname}
+```
+
+### Run Pagespeed CSV Generation script with auto handling of Uploads and snapshots
+
+```bash
+npm run test:grep -- "pagespeed" --headed
 ```
 
 ## For Specific test and selected browser
@@ -69,6 +74,7 @@ npx playwright test tests\pagespeed\pagespeed.spec.ts --project=chromium --heade
 ```bash
 npm run report
 ```
+
 # Project Structure
 
 ```
@@ -120,4 +126,3 @@ PLAYWRIGHT_OUTSIDE/
 └── playwright.config.ts                                # Global Playwright configuration (browser, timeout, retries)
 
 ```
-

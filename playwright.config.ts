@@ -4,10 +4,10 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests", // Directory where your tests will reside
-  // retries: 2, //  Retry failed tests once
+  retries: 2, //  Retry failed tests once
   testMatch: "**/*.spec.ts", // Pattern for test files
   fullyParallel: true, // Run tests in parallel
-  workers: 25, // Number of parallel workers, adjust as needed
+  workers: 5, // Number of parallel workers, adjust as needed
   reporter: [["html", { outputFolder: "playwright-report" }], ["list"]],
   use: {
     // baseURL: "https://outside.studio/", // The site you're testing
@@ -43,7 +43,6 @@ export default defineConfig({
         baseURL: process.env.Way_QA_URL,
       },
     },
-
     // ===============================
     // CGH → Chrome only
     // ===============================

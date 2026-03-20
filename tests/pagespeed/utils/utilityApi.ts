@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 // Global constants for the report directory and CSV path
-export const REPORT_DIR = path.join(__dirname,"..","pagespeedreport");
+export const REPORT_DIR = path.join(__dirname, "..", "pagespeedreport");
 export const CSV_FILE_PATH = path.join(
   REPORT_DIR,
   "pagespeed_scores_combined.csv",
@@ -14,7 +14,7 @@ export const CSV_FILE_PATH = path.join(
 if (!fs.existsSync(REPORT_DIR)) {
   fs.mkdirSync(REPORT_DIR, { recursive: true });
 }
-export class Utility {
+export class UtilityApi {
   //   constructor(private page: Page,) {}
   constructor(
     private page: Page,
