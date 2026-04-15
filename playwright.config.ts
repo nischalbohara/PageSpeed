@@ -66,6 +66,15 @@ export default defineConfig({
         baseURL: process.env.ICT_UAT_URL,
       },
     },
+
+    {
+      name: "statebags-chromium",
+      testDir: "./tests/statebags",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: process.env.STATEBAGS_STG_URL,
+      },
+    },
   ],
   timeout: 30000, // Timeout for each test (30 seconds)
 });

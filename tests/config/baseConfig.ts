@@ -74,6 +74,24 @@ export function getCustomerConfig(
       }
       return { ...config, ...config.roles[role] };
     }
+
+    case "Statebags": {
+      const config: BaseConfig = {
+        baseUrl: process.env.STATEBAGS_STG_URL || "",
+        roles: {
+          statebagsQA: {
+            username: process.env.STATEBAGS_QA_ADMIN_USERNAME || "",
+            password: process.env.STATEBAGS_QA_ADMIN_PASSWORD || "",
+          },
+        },
+      };
+      if (!config.roles[role]) {
+        throw new Error(
+          `Role "${role}" is not defined for customer "${customer}"`,
+        );
+      }
+      return { ...config, ...config.roles[role] };
+    }
     // Add more Config as needed
     default:
       throw new Error(`Unknown customer: ${customer}`);
