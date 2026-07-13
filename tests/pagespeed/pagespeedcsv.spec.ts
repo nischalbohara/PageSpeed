@@ -4,6 +4,9 @@ import {
   EneryHubPAGES,
   NationsWellPages,
   FoundEnergyPages,
+  NexusDatacentersPAGES,
+  NexusDataPagesDev,
+  FishsEddyPAGES,
 } from "./fixtures/pageSpeedTargets";
 import { UtilityWeb } from "./utils/utilityWeb";
 
@@ -20,10 +23,10 @@ test.describe("PageSpeed Insights Screenshots", () => {
    */
   test.setTimeout(360_000); // 6 minutes
 
-  FoundEnergyPages.forEach((pageInfo) => {
+  NexusDatacentersPAGES.forEach((pageInfo) => {
     test(`PageSpeed: ${pageInfo.name}`, async ({ page }) => {
       const outputDir = path.join(
-        process.cwd(),
+        path.resolve(),
         "screenshots",
         psUtils.sanitizeName(pageInfo.name),
       );

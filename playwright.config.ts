@@ -1,9 +1,10 @@
 import "dotenv/config";
 
 import { defineConfig, devices } from "@playwright/test";
+import process from "node:process";
 
 export default defineConfig({
-  testDir: "./tests", // Directory where your tests will reside
+  testDir: "./tests/pagespeed", // Directory where your tests will reside
   retries: 2, //  Retry failed tests once
   testMatch: "**/*.spec.ts", // Pattern for test files
   fullyParallel: true, // Run tests in parallel

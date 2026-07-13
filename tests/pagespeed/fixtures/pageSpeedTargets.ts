@@ -346,3 +346,134 @@ export const FoundEnergyPages = [
     url: "https://found-industries.com/energy/what-s-your-problem-turning-old-cans-into-clean-energy/",
   },
 ];
+
+export const NexusDatacentersPAGES = [
+  { name: "Homepage", url: "https://nexus-datacenters.com/" },
+  { name: "Global", url: "https://nexus-datacenters.com/global/" },
+  {
+    name: "Privacy Policy",
+    url: "https://nexus-datacenters.com/privacy-policy/",
+  },
+  {
+    name: "Opt-Out Preferences",
+    url: "https://nexus-datacenters.com/opt-out-preferences/",
+  },
+  { name: "Contact", url: "https://nexus-datacenters.com/contact/" },
+  {
+    name: "General Inquiry",
+    url: "https://nexus-datacenters.com/contact/general-inquiry/",
+  },
+  {
+    name: "Work With Us",
+    url: "https://nexus-datacenters.com/contact/work-with-us/",
+  },
+  { name: "Community", url: "https://nexus-datacenters.com/community/" },
+  { name: "Team", url: "https://nexus-datacenters.com/team/" },
+  {
+    name: "Team - Megan Claydon",
+    url: "https://nexus-datacenters.com/team/megan-claydon/",
+  },
+  {
+    name: "Team - Brent Wahl",
+    url: "https://nexus-datacenters.com/team/brent-wahl/",
+  },
+  {
+    name: "Team - Ivan Van Der Walt",
+    url: "https://nexus-datacenters.com/team/ivan-van-der-walt/",
+  },
+  {
+    name: "Team - Ben Heichelbech",
+    url: "https://nexus-datacenters.com/team/ben-heichelbech/",
+  },
+  {
+    name: "Team - Loyd Patterson",
+    url: "https://nexus-datacenters.com/team/loyd-patterson/",
+  },
+  {
+    name: "Team - Jason Webber",
+    url: "https://nexus-datacenters.com/team/jason-webber/",
+  },
+] as const;
+
+export const NexusDataPagesDev = [
+  {
+    name: "Privacy Policy",
+    url: "https://nexusdatacedev.wpenginepowered.com/privacy-policy/",
+  },
+  {
+    name: "Contact",
+    url: "https://nexusdatacedev.wpenginepowered.com/contact/",
+  },
+  {
+    name: "Home",
+    url: "https://nexusdatacedev.wpenginepowered.com/",
+  },
+  {
+    name: "Opt-Out Preferences",
+    url: "https://nexusdatacedev.wpenginepowered.com/opt-out-preferences/",
+  },
+  {
+    name: "Global",
+    url: "https://nexusdatacedev.wpenginepowered.com/global/",
+  },
+  {
+    name: "General Inquiry",
+    url: "https://nexusdatacedev.wpenginepowered.com/contact/general-inquiry/",
+  },
+  {
+    name: "Work With Us",
+    url: "https://nexusdatacedev.wpenginepowered.com/contact/work-with-us/",
+  },
+  {
+    name: "Team",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/",
+  },
+  {
+    name: "Community",
+    url: "https://nexusdatacedev.wpenginepowered.com/community/",
+  },
+  {
+    name: "Megan Claydon",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/megan-claydon/",
+  },
+  {
+    name: "Brent Wahl",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/brent-wahl/",
+  },
+  {
+    name: "Ben Heichelbech",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/ben-heichelbech/",
+  },
+  {
+    name: "Loyd Patterson",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/loyd-patterson/",
+  },
+  {
+    name: "Ivan Van Der Walt",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/ivan-van-der-walt/",
+  },
+  {
+    name: "Jason Webber",
+    url: "https://nexusdatacedev.wpenginepowered.com/team/jason-webber/",
+  },
+];
+
+export const FishsEddyPAGES = [
+  { name: "Homepage", url: "https://www.fishseddy.com/" },
+  {
+    name: "Scallop Edge Dishes",
+    url: "https://www.fishseddy.com/collections/scallop-edge-dishes",
+  },
+  {
+    name: "Kitchen Linens",
+    url: "https://www.fishseddy.com/collections/kitchen-linens",
+  },
+  {
+    name: "Pleasantries Don't Touch My Nuts Tea Towel",
+    url: "https://www.fishseddy.com/products/pleasantries-dont-touch-my-nuts-tea-towel",
+  },
+  {
+    name: "212 Skyline Tea Towel",
+    url: "https://www.fishseddy.com/products/212-skyline-tea-towel",
+  },
+] as const;
