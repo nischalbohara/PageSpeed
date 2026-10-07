@@ -1,11 +1,11 @@
-require("dotenv/config");
+import "dotenv/config";
 
-const { defineConfig, devices } = require("@playwright/test");
+import { defineConfig, devices } from "@playwright/test";
 
-module.exports = defineConfig({
+export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
-  workers: 4,
+  workers: 5,
   retries: 3,
   timeout: 30_000, // per-suite timeouts are set inside each spec
   reporter: [

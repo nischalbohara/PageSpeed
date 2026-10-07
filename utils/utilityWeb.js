@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const { v2: cloudinary } = require("cloudinary");
+import fs from "node:fs";
+import path from "node:path";
+import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -256,4 +256,4 @@ function appendRow(result) {
   fs.appendFileSync(CSV_PATH, row + "\n", "utf-8");
 }
 
-module.exports = { sanitizeName, runPageSpeedTest };
+export { sanitizeName, runPageSpeedTest };

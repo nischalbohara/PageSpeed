@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
 const CSV_PATH = path.join(process.cwd(), "reports", "pagespeed-api.csv");
 
@@ -79,4 +79,4 @@ function appendScoresRow(name, url, desktop, mobile) {
   fs.appendFileSync(CSV_PATH, row + "\n", "utf-8");
 }
 
-module.exports = { fetchScores, appendScoresRow };
+export { fetchScores, appendScoresRow };

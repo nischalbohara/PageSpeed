@@ -1,6 +1,6 @@
-const { test } = require("@playwright/test");
-const { NRCHealthPAGES } = require("../fixtures/urls");
-const { fetchScores, appendScoresRow } = require("../utils/utilityApi");
+import { test } from "@playwright/test";
+import { NRCHealthPAGES } from "../fixtures/urls.js";
+import { fetchScores, appendScoresRow } from "../utils/utilityApi.js";
 
 test.describe("PageSpeed API scores", () => {
   test.setTimeout(300_000); // PSI API can be slow on large pages

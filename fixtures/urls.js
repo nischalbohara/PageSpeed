@@ -1,4 +1,4 @@
-const NRCHealthPAGES = [
+export const NRCHealthPAGES = [
   {
     name: "Transforming Pediatric Care Workshop",
     url: "https://nrchealth.com/blog/transforming-pediatric-care-nrc-health-experts-interactive-workshop/",
@@ -84,5 +84,3 @@ const NRCHealthPAGES = [
     url: "https://nrchealth.com/human-understanding-program/experience/",
   },
 ];
-
-module.exports = { NRCHealthPAGES };
