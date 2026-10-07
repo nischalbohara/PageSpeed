@@ -7,6 +7,7 @@ import {
   NexusDatacentersPAGES,
   NexusDataPagesDev,
   FishsEddyPAGES,
+  NRCHealthPAGES
 } from "./fixtures/pageSpeedTargets";
 import { UtilityWeb } from "./utils/utilityWeb";
 
@@ -23,7 +24,7 @@ test.describe("PageSpeed Insights Screenshots", () => {
    */
   test.setTimeout(360_000); // 6 minutes
 
-  NexusDatacentersPAGES.forEach((pageInfo) => {
+  NRCHealthPAGES.forEach((pageInfo) => {
     test(`PageSpeed: ${pageInfo.name}`, async ({ page }) => {
       const outputDir = path.join(
         path.resolve(),
