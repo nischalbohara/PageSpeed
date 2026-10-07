@@ -67,6 +67,7 @@ npm run test:grep -- "pagespeed" --headed
 
 ```bash
 npx playwright test tests/pagespeed/pagespeedcsv.spec.ts --project=pagespeed-chromium --headed
+npx playwright test tests/pagespeed/pagespeedcsv.spec.ts
 ```
 
 ## View the HTML report

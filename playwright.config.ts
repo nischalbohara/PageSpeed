@@ -5,7 +5,7 @@ import process from "node:process";
 
 export default defineConfig({
   testDir: "./tests/pagespeed", // Directory where your tests will reside
-  retries: 2, //  Retry failed tests once
+  retries: 3, //  Retry failed tests once
   testMatch: "**/*.spec.ts", // Pattern for test files
   fullyParallel: true, // Run tests in parallel
   workers: 5, // Number of parallel workers, adjust as needed

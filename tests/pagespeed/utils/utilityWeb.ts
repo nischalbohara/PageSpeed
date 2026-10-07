@@ -12,11 +12,23 @@ interface PageScores {
   seo: string;
 }
 
+interface PageMetrics {
+  fcp: string;
+  lcp: string;
+  tbt: string;
+  cls: string;
+  speedIndex: string;
+}
+
+interface DeviceReport extends PageScores {
+  metrics: PageMetrics;
+}
+
 interface PageResult {
   name: string;
   url: string;
-  desktop: PageScores;
-  mobile: PageScores;
+  desktop: DeviceReport;
+  mobile: DeviceReport;
   cloudinaryUrls: {
     mobile: string;
     desktop: string;
@@ -40,8 +52,31 @@ const CSV_PATH = path.join(
   "screenshots",
   "pagespeed-scores.csv",
 );
-const CSV_HEADER =
-  "Page,URL,Desktop Performance,Desktop Accessibility,Desktop Best Practices,Desktop SEO,Mobile Performance,Mobile Accessibility,Mobile Best Practices,Mobile SEO,Mobile Screenshot,Desktop Screenshot";
+const METRIC_LABELS: Array<[keyof PageMetrics, string]> = [
+  ["fcp", "First Contentful Paint"],
+  ["lcp", "Largest Contentful Paint"],
+  ["tbt", "Total Blocking Time"],
+  ["cls", "Cumulative Layout Shift"],
+  ["speedIndex", "Speed Index"],
+];
+
+const deviceCols = (device: "Desktop" | "Mobile") =>
+  [
+    `${device} Performance`,
+    `${device} Accessibility`,
+    `${device} Best Practices`,
+    `${device} SEO`,
+    ...METRIC_LABELS.map(([, label]) => `${device} ${label}`),
+  ].join(",");
+
+const CSV_HEADER = [
+  "Page",
+  "URL",
+  deviceCols("Desktop"),
+  deviceCols("Mobile"),
+  "Mobile Screenshot",
+  "Desktop Screenshot",
+].join(",");
 
 export class UtilityWeb {
   // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -72,31 +107,76 @@ export class UtilityWeb {
   }
 
   /**
-   * Extracts both mobile and desktop scores in a single evaluate call
-   * from the window-injected Lighthouse JSON objects.
+   * Extracts scores + core web vitals for both mobile and desktop in a single
+   * evaluate call from the window-injected Lighthouse JSON objects.
    */
   async scrapeAllScores(
     page: any,
-  ): Promise<{ mobile: PageScores; desktop: PageScores }> {
-    const fallback: PageScores = {
+  ): Promise<{ mobile: DeviceReport; desktop: DeviceReport }> {
+    const fallback: DeviceReport = {
       performance: "N/A",
       accessibility: "N/A",
       bestPractices: "N/A",
       seo: "N/A",
+      metrics: {
+        fcp: "N/A",
+        lcp: "N/A",
+        tbt: "N/A",
+        cls: "N/A",
+        speedIndex: "N/A",
+      },
     };
 
     try {
-      return await page.evaluate(() => {
+      const scraped = await page.evaluate(() => {
         const w = window as any;
+
+        const AUDIT_IDS: Record<string, string> = {
+          fcp: "first-contentful-paint",
+          lcp: "largest-contentful-paint",
+          tbt: "total-blocking-time",
+          cls: "cumulative-layout-shift",
+          speedIndex: "speed-index",
+        };
+
+        const formatMetric = (audit: any): string => {
+          if (!audit) return "N/A";
+          const display = audit.displayValue;
+          if (display != null && String(display).trim() !== "") {
+            return String(display).trim();
+          }
+          const n = audit.numericValue;
+          if (n == null || Number.isNaN(n)) return "N/A";
+          switch (audit.numericUnit) {
+            case "millisecond":
+              return n >= 1000
+                ? `${(n / 1000).toFixed(1)} s`
+                : `${Math.round(n)} ms`;
+            case "second":
+              return `${n.toFixed(1)} s`;
+            case "unitless":
+              return n.toFixed(3);
+            default:
+              return String(n);
+          }
+        };
+
         const extract = (data: any): any => {
           if (!data?.categories) return null;
           const score = (key: string) =>
             Math.round((data.categories[key]?.score ?? 0) * 100).toString();
+          const metrics = Object.fromEntries(
+            Object.entries(AUDIT_IDS).map(([key, auditId]) => [
+              key,
+              formatMetric(data.audits?.[auditId]),
+            ]),
+          );
           return {
             performance: score("performance"),
             accessibility: score("accessibility"),
             bestPractices: score("best-practices"),
             seo: score("seo"),
+            metrics,
           };
         };
         return {
@@ -104,10 +184,37 @@ export class UtilityWeb {
           desktop: extract(w.__LIGHTHOUSE_DESKTOP_JSON__),
         };
       });
+      return {
+        mobile: scraped?.mobile ?? fallback,
+        desktop: scraped?.desktop ?? fallback,
+      };
     } catch (e: any) {
       console.warn(`Could not scrape scores: ${e.message}`);
       return { mobile: fallback, desktop: fallback };
     }
+  }
+
+  /**
+   * Dismisses the Google cookie banner ("Ok, Got it.") so it never overlaps
+   * report values in screenshots. Safe to call repeatedly — no-op when absent.
+   */
+  async dismissCookieBanner(page: any, timeoutMs = 2_000): Promise<void> {
+    const acceptBtn = page
+      .locator(
+        'button:has-text("Ok, Got it"), button:has-text("Accept all"), button:has-text("Reject all")',
+      )
+      .first();
+
+    const visible = await acceptBtn
+      .waitFor({ state: "visible", timeout: timeoutMs })
+      .then(() => true)
+      .catch(() => false);
+    if (!visible) return;
+
+    await acceptBtn.click({ timeout: 3_000 }).catch(() => {});
+    await acceptBtn
+      .waitFor({ state: "hidden", timeout: 3_000 })
+      .catch(() => {});
   }
 
   /**
@@ -144,6 +251,7 @@ export class UtilityWeb {
       )
       .catch(() => {}); // non-fatal — screenshot whatever is visible
 
+    await this.dismissCookieBanner(page);
     await page.evaluate(() => window.scrollTo(0, 0)).catch(() => {});
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
@@ -157,12 +265,18 @@ export class UtilityWeb {
 
   /**
    * Appends one result row to the CSV (sync append — safe across parallel workers).
+   * Rewrites the file when the header schema changes so old rows never misalign.
    */
   appendRowToCSV(result: PageResult): void {
     const dir = path.dirname(CSV_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    if (!fs.existsSync(CSV_PATH)) {
+    const headerMismatch =
+      fs.existsSync(CSV_PATH) &&
+      (fs.readFileSync(CSV_PATH, "utf-8").split("\n")[0] ?? "").trim() !==
+        CSV_HEADER;
+
+    if (!fs.existsSync(CSV_PATH) || headerMismatch) {
       fs.writeFileSync(CSV_PATH, CSV_HEADER + "\n", "utf-8");
     }
 
@@ -174,15 +288,23 @@ export class UtilityWeb {
       d.accessibility,
       d.bestPractices,
       d.seo,
+      ...this.metricValues(d.metrics),
       m.performance,
       m.accessibility,
       m.bestPractices,
       m.seo,
+      ...this.metricValues(m.metrics),
       `"${result.cloudinaryUrls.mobile}"`,
       `"${result.cloudinaryUrls.desktop}"`,
     ].join(",");
 
     fs.appendFileSync(CSV_PATH, row + "\n", "utf-8");
+  }
+
+  private metricValues(metrics?: PageMetrics): string[] {
+    return METRIC_LABELS.map(
+      ([key]) => `"${(metrics?.[key] ?? "N/A").replace(/"/g, "")}"`,
+    );
   }
 
   async runPageSpeedTest(
@@ -197,16 +319,11 @@ export class UtilityWeb {
     // ── 1. Navigate to PageSpeed ──────────────────────────────────────────────
     await page.goto("https://pagespeed.web.dev/", {
       waitUntil: "domcontentloaded",
-      timeout: 3000,
+      timeout: 10000,
     });
 
     // Dismiss cookie banner if present (single attempt, no loop)
-    const acceptBtn = page
-      .locator('button:has-text("Ok, Got it."), button:has-text("Accept all")')
-      .first();
-    if (await acceptBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      await acceptBtn.click();
-    }
+    await this.dismissCookieBanner(page, 4_000);
 
     // ── 2. Submit the target URL ──────────────────────────────────────────────
     const urlInput = await page.waitForSelector(
