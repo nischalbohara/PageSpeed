@@ -44,7 +44,12 @@ jobs:
       run: npx playwright install --with-deps chromium
 
     - name: Run Playwright Tests
-      run:  npx playwright test tests/pagespeed/pagespeedcsv.spec.ts
+      run: npx playwright test
+      env:
+        PS_APIKEY: ${{ secrets.PS_APIKEY }}
+        CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+        CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
@@ -54,12 +59,12 @@ jobs:
         path: playwright-report/
         retention-days: 30
 
-    - name: Upload CSV Files
+    - name: Upload CSV Reports
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: csv-artifacts
-        path: screenshots/**/*.csv
+        path: reports/
         retention-days: 30
     - name: Notify Slack with Test Results
       if: always()

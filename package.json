@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:grep": "playwright test --grep",
+    "test:screenshots": "playwright test tests/pagespeedcsv.spec.js",
+    "test:api": "playwright test tests/pagespeed-api.spec.js",
     "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed",
-    "test:debug": "playwright test --debug",
     "report": "playwright show-report",
     "format": "prettier --write \"**/*.{ts,js,json,md}\""
   },
@@ -18,14 +17,10 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.58.0",
-    "@types/node": "^25.9.5",
-    "lighthouse": "^13.0.3",
-    "playwright-lighthouse": "^4.0.0",
     "prettier": "^3.5.3"
   },
   "dependencies": {
     "cloudinary": "^2.9.0",
-    "dotenv": "^17.2.3",
-    "node-fetch": "^3.3.2"
+    "dotenv": "^17.2.3"
   }
 }
